@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Cognita — AI Study Companions That Evolve With You</title>
+  <meta name="description" content="Cognita is the ultimate AI-powered study platform. Build, learn, and grow with intelligent companions that adapt to your learning style.">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧠</text></svg>">
+</head>
+<body>
+
+<!-- NAVIGATION -->
+<div class="nav-wrapper">
+  <nav id="main-nav">
+    <a href="#" class="nav-logo">
+      <span style="font-size:1.6rem">🧠</span>
+      <span>Cognita</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#features">Features</a></li>
+      <li><a href="#workflow">Workflow</a></li>
+      <li><a href="#community">Community</a></li>
+      <li><a href="https://github.com/Yashasm18/Cognita" target="_blank">GitHub</a></li>
+    </ul>
+    <div class="nav-cta">
+      <a href="https://github.com/Yashasm18/Cognita" target="_blank" class="nav-stars" style="text-decoration:none">⭐ Star on GitHub</a>
+      <a href="https://github.com/Yashasm18/Cognita" target="_blank" class="btn-primary">Get Started</a>
+    </div>
+    <button class="mobile-toggle" onclick="document.querySelector('.nav-links').classList.toggle('show')" aria-label="Menu">☰</button>
+  </nav>
+</div>
+
+<!-- HERO -->
+<section class="hero" id="hero">
+  <div class="hero-content">
+    <h1>AI companions that learn with you</h1>
+    <p>Cognita is the ultimate space for learning: to find, build, and study with AI companions that adapt to your style. We're building the world's most intelligent study network.</p>
+    <div class="hero-buttons">
+      <a href="https://github.com/Yashasm18/Cognita" target="_blank" class="btn-primary" style="padding:14px 32px;font-size:1rem">Get started for free</a>
+      <a href="#features" class="btn-secondary" style="padding:14px 32px;font-size:1rem">Explore Features ↓</a>
+    </div>
+  </div>
+
+  <!-- APP MOCKUP -->
+  <div class="hero-mockup">
+    <div class="mockup-window">
+      <div class="mockup-titlebar">
+        <div class="mockup-dot"></div><div class="mockup-dot"></div><div class="mockup-dot"></div>
+        <span style="margin-left:12px;font-size:0.82rem;font-weight:600;color:var(--text-secondary)">Cognita</span>
+      </div>
+      <div class="mockup-body">
+        <div class="mockup-sidebar">
+          <div style="font-size:0.7rem;font-weight:600;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.08em;padding:4px 12px 12px">Companions</div>
+          <div class="mockup-sidebar-item active">🎯 Study Coach</div>
+          <div class="mockup-sidebar-item">📚 Research Pro</div>
+          <div class="mockup-sidebar-item">✍️ Essay Writer</div>
+          <div class="mockup-sidebar-item">🔬 Lab Assistant</div>
+          <div class="mockup-sidebar-item">🧮 Math Tutor</div>
+          <div class="mockup-sidebar-item">🌐 Language Buddy</div>
+          <div class="mockup-sidebar-item">💡 Brainstorm AI</div>
+          <div class="mockup-sidebar-item">📊 Data Analyst</div>
+        </div>
+        <div class="mockup-main">
+          <h3>Everything's ready</h3>
+          <p>Start a conversation with any companion to begin learning</p>
+          <div style="display:flex;gap:12px;margin-top:20px;flex-wrap:wrap;justify-content:center">
+            <span style="padding:8px 16px;border-radius:999px;border:1px solid var(--border);font-size:0.8rem;cursor:default;transition:all 0.2s" onmouseover="this.style.background='var(--accent-light)'" onmouseout="this.style.background='transparent'">📝 Summarize Notes</span>
+            <span style="padding:8px 16px;border-radius:999px;border:1px solid var(--border);font-size:0.8rem;cursor:default;transition:all 0.2s" onmouseover="this.style.background='var(--accent-light)'" onmouseout="this.style.background='transparent'">🧠 Quiz Me</span>
+            <span style="padding:8px 16px;border-radius:999px;border:1px solid var(--border);font-size:0.8rem;cursor:default;transition:all 0.2s" onmouseover="this.style.background='var(--accent-light)'" onmouseout="this.style.background='transparent'">🔍 Deep Research</span>
+            <span style="padding:8px 16px;border-radius:999px;border:1px solid var(--border);font-size:0.8rem;cursor:default;transition:all 0.2s" onmouseover="this.style.background='var(--accent-light)'" onmouseout="this.style.background='transparent'">💬 Explain Topic</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- USE CASES -->
+<section id="use-cases">
+  <div class="section-container fade-in">
+    <div style="text-align:center;margin-bottom:48px">
+      <span class="section-tag">Use Cases</span>
+      <h2 class="section-title" style="max-width:600px;margin:16px auto 0">See what others are building</h2>
+    </div>
+    <div class="cards-scroll">
+      <div class="use-card">
+        <h4>📄 Research Paper Summarizer</h4>
+        <p>Upload any academic paper and get structured summaries with key findings, methods, and takeaways.</p>
+      </div>
+      <div class="use-card">
+        <h4>🎓 Exam Prep Coach</h4>
+        <p>Build personalized study plans and practice with AI-generated quizzes tailored to your weak areas.</p>
+      </div>
+      <div class="use-card">
+        <h4>🌍 Language Immersion</h4>
+        <p>Practice conversations in 50+ languages with real-time corrections and cultural context.</p>
+      </div>
+      <div class="use-card">
+        <h4>📊 Data Analysis Tutor</h4>
+        <p>Learn data science by doing — get instant feedback on code, visualizations, and statistical analysis.</p>
+      </div>
+      <div class="use-card">
+        <h4>✍️ Writing Workshop</h4>
+        <p>Refine essays with AI feedback on structure, argumentation, citations, and style improvements.</p>
+      </div>
+      <div class="use-card">
+        <h4>🧬 STEM Lab Assistant</h4>
+        <p>Interactive problem-solving for physics, chemistry, and biology with step-by-step explanations.</p>
+      </div>
+      <div class="use-card">
+        <h4>📖 Book Club AI</h4>
+        <p>Discuss literature with an AI that understands themes, symbolism, and historical context.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section id="features" class="features-section">
+  <div class="section-container">
+
+    <div class="feature-block fade-in">
+      <div class="feature-text">
+        <span class="section-tag">Create</span>
+        <h3>Companions built for real learning</h3>
+        <p>Design your perfect study partner in seconds. Define knowledge areas, teaching style, and personality — Cognita handles the rest.</p>
+        <ul>
+          <li>One sentence to create a companion</li>
+          <li>Custom knowledge bases and skills</li>
+          <li>Share companions with classmates</li>
+        </ul>
+      </div>
+      <div class="feature-visual">
+        <div class="feature-visual-content">
+          <div style="font-size:3rem;margin-bottom:12px">🎨</div>
+          <div style="font-weight:600;margin-bottom:4px">Companion Builder</div>
+          <div style="font-size:0.82rem;color:var(--text-secondary)">Drag, drop, and customize</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="feature-block fade-in">
+      <div class="feature-text">
+        <span class="section-tag">Connect</span>
+        <h3>Plug into the tools you use</h3>
+        <p>Connect your companions to 200+ integrations — from Google Docs to Notion, Anki to Zotero. Your study ecosystem, unified.</p>
+        <ul>
+          <li>200+ integrations available</li>
+          <li>Custom API connections</li>
+          <li>Sync across all devices</li>
+        </ul>
+      </div>
+      <div class="feature-visual">
+        <div class="feature-icon-grid">
+          <div class="feature-icon-item">📄</div>
+          <div class="feature-icon-item">📊</div>
+          <div class="feature-icon-item">🔗</div>
+          <div class="feature-icon-item">📝</div>
+          <div class="feature-icon-item">🗂️</div>
+          <div class="feature-icon-item">☁️</div>
+          <div class="feature-icon-item">📱</div>
+          <div class="feature-icon-item">💾</div>
+          <div class="feature-icon-item">🌐</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="feature-block fade-in">
+      <div class="feature-text">
+        <span class="section-tag">Collaborate</span>
+        <h3>A new kind of study group</h3>
+        <p>Form groups where humans and AI companions work together — parallel research, shared notes, and iterative review sessions.</p>
+        <ul>
+          <li>Auto team formation</li>
+          <li>Parallel collaboration</li>
+          <li>Multi-subject coverage</li>
+          <li>Iterative improvement</li>
+        </ul>
+      </div>
+      <div class="feature-visual">
+        <div class="feature-visual-content">
+          <div style="display:flex;gap:8px;justify-content:center;margin-bottom:16px">
+            <div style="width:44px;height:44px;border-radius:50%;background:#fde68a;display:flex;align-items:center;justify-content:center">👩‍🎓</div>
+            <div style="width:44px;height:44px;border-radius:50%;background:#c4b5fd;display:flex;align-items:center;justify-content:center">🤖</div>
+            <div style="width:44px;height:44px;border-radius:50%;background:#f9a8d4;display:flex;align-items:center;justify-content:center">👨‍🔬</div>
+          </div>
+          <div style="font-weight:600;margin-bottom:4px">Study Group</div>
+          <div style="font-size:0.82rem;color:var(--text-secondary)">Humans + AI, working together</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- WORKFLOW -->
+<section id="workflow">
+  <div class="section-container fade-in">
+    <div style="text-align:center;margin-bottom:48px">
+      <span class="section-tag">Workflow</span>
+      <h2 class="section-title">Work with AI across your study flow</h2>
+      <p class="section-subtitle" style="margin-left:auto;margin-right:auto;text-align:center">From notes to insights, Cognita companions integrate into every step of your learning journey.</p>
+    </div>
+    <div class="workflow-grid">
+      <div class="workflow-card">
+        <div class="wf-icon">📝</div>
+        <h4>Notes</h4>
+        <p>Write and refine notes with AI assistance and shared context.</p>
+      </div>
+      <div class="workflow-card">
+        <div class="wf-icon">📅</div>
+        <h4>Schedule</h4>
+        <p>Schedule study sessions and let companions prepare materials automatically.</p>
+      </div>
+      <div class="workflow-card">
+        <div class="wf-icon">📁</div>
+        <h4>Projects</h4>
+        <p>Organize research by project with structured tracking and milestones.</p>
+      </div>
+      <div class="workflow-card">
+        <div class="wf-icon">👥</div>
+        <h4>Workspace</h4>
+        <p>A shared space for teams to collaborate with AI and each other.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section id="community" class="testimonials-section">
+  <div class="section-container fade-in">
+    <div style="text-align:center;margin-bottom:48px">
+      <span class="section-tag">Community</span>
+      <h2 class="section-title">Loved by learners worldwide</h2>
+    </div>
+    <div class="testimonials-grid">
+      <div class="testimonial-card">
+        <p>"Cognita transformed how I study. The AI companions feel like having a brilliant tutor available 24/7."</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">SR</div>
+          <div class="testimonial-info"><h5>Sarah R.</h5><span>Medical Student</span></div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <p>"The research companion saved me 20+ hours on my thesis. It found papers I never would have discovered."</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">JK</div>
+          <div class="testimonial-info"><h5>James K.</h5><span>PhD Candidate</span></div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <p>"As a CS student, the code review companion is incredible. It explains concepts better than most textbooks."</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">AL</div>
+          <div class="testimonial-info"><h5>Aisha L.</h5><span>CS Undergraduate</span></div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <p>"I use Cognita to prep for exams. The quiz generation feature alone is worth it — it knows exactly where I'm weak."</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">MP</div>
+          <div class="testimonial-info"><h5>Marco P.</h5><span>Law Student</span></div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <p>"Open source and this good? The team behind Cognita is building something truly special for education."</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">DR</div>
+          <div class="testimonial-info"><h5>Dr. Rivera</h5><span>Professor, MIT</span></div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <p>"The language companion helped me pass JLPT N2. It adapts to my level and keeps conversations natural."</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">YT</div>
+          <div class="testimonial-info"><h5>Yuki T.</h5><span>Language Learner</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PARTNERS MARQUEE -->
+<section style="padding:60px 24px;overflow:hidden">
+  <div class="partners-track">
+    <div class="partners-marquee">
+      <span class="partner-logo">Google</span>
+      <span class="partner-logo">OpenAI</span>
+      <span class="partner-logo">Anthropic</span>
+      <span class="partner-logo">DeepSeek</span>
+      <span class="partner-logo">Meta AI</span>
+      <span class="partner-logo">Mistral</span>
+      <span class="partner-logo">Cohere</span>
+      <span class="partner-logo">Hugging Face</span>
+      <span class="partner-logo">LangChain</span>
+      <span class="partner-logo">Ollama</span>
+      <span class="partner-logo">Google</span>
+      <span class="partner-logo">OpenAI</span>
+      <span class="partner-logo">Anthropic</span>
+      <span class="partner-logo">DeepSeek</span>
+      <span class="partner-logo">Meta AI</span>
+      <span class="partner-logo">Mistral</span>
+      <span class="partner-logo">Cohere</span>
+      <span class="partner-logo">Hugging Face</span>
+      <span class="partner-logo">LangChain</span>
+      <span class="partner-logo">Ollama</span>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section" id="cta">
+  <div class="cta-content fade-in">
+    <h2>Start learning smarter today</h2>
+    <p>Join thousands of students and researchers who are already studying with AI companions.</p>
+    <div class="cta-buttons">
+      <a href="https://github.com/Yashasm18/Cognita" target="_blank" class="btn-primary" style="padding:16px 36px;font-size:1.05rem">Get started for free</a>
+      <a href="https://github.com/Yashasm18/Cognita#readme" target="_blank" class="btn-secondary" style="padding:16px 36px;font-size:1.05rem">View Documentation</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <a href="#hero" class="nav-logo"><span style="font-size:1.6rem">🧠</span><span>Cognita</span></a>
+      <p style="margin-top:12px">The ultimate AI study platform for learners who want more than answers — they want understanding.</p>
+    </div>
+    <div class="footer-col">
+      <h5>Product</h5>
+      <ul>
+        <li><a href="https://github.com/Yashasm18/Cognita" target="_blank">GitHub Repo</a></li>
+        <li><a href="https://github.com/Yashasm18/Cognita/releases" target="_blank">Download</a></li>
+        <li><a href="#features">Companions</a></li>
+        <li><a href="#use-cases">Use Cases</a></li>
+        <li><a href="#community">Community</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h5>Features</h5>
+      <ul>
+        <li><a href="#features">Overview</a></li>
+        <li><a href="#features">Integrations</a></li>
+        <li><a href="#features">AI Models</a></li>
+        <li><a href="#workflow">Workflow</a></li>
+        <li><a href="#community">Study Groups</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h5>Resources</h5>
+      <ul>
+        <li><a href="https://github.com/Yashasm18/Cognita#readme" target="_blank">Blog</a></li>
+        <li><a href="https://github.com/Yashasm18/Cognita#readme" target="_blank">Documentation</a></li>
+        <li><a href="https://github.com/Yashasm18/Cognita/wiki" target="_blank">Tutorials</a></li>
+        <li><a href="https://github.com/Yashasm18/Cognita" target="_blank">API Reference</a></li>
+        <li><a href="https://github.com/Yashasm18/Cognita/commits/main" target="_blank">Changelog</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h5>Company</h5>
+      <ul>
+        <li><a href="#hero">About</a></li>
+        <li><a href="https://github.com/Yashasm18" target="_blank">Creator</a></li>
+        <li><a href="https://github.com/Yashasm18/Cognita/blob/main/LICENSE" target="_blank">License</a></li>
+        <li><a href="https://github.com/Yashasm18/Cognita" target="_blank">Contribute</a></li>
+        <li><a href="https://github.com/Yashasm18/Cognita/issues" target="_blank">Contact</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2024–2026 Cognita. All rights reserved.</p>
+    <div class="footer-social">
+      <a href="https://github.com/Yashasm18/Cognita" target="_blank" title="GitHub">GH</a>
+      <a href="https://github.com/Yashasm18" target="_blank" title="Profile">👤</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+// Intersection Observer for fade-in animations
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+      observer.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -60px 0px' });
+
+document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+// Nav background on scroll
+const nav = document.getElementById('main-nav');
+window.addEventListener('scroll', () => {
+  if (window.scrollY > 100) {
+    nav.style.background = 'rgba(255,255,255,0.95)';
+    nav.style.boxShadow = '0 4px 20px rgba(0,0,0,0.08)';
+  } else {
+    nav.style.background = 'rgba(255,255,255,0.82)';
+    nav.style.boxShadow = '0 1px 3px rgba(0,0,0,0.06)';
+  }
+});
+
+// Smooth scroll for nav links
+document.querySelectorAll('a[href^="#"]').forEach(link => {
+  link.addEventListener('click', e => {
+    e.preventDefault();
+    const target = document.querySelector(link.getAttribute('href'));
+    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+});
+</script>
+</body>
+</html>
