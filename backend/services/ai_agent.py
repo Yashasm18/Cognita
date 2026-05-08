@@ -2,6 +2,8 @@
 
 Manages study sessions, document context, and conversational AI
 powered by Groq / Ollama through the LLM service.
+
+Sessions and chat history are persisted to Supabase when available.
 """
 
 from __future__ import annotations
@@ -12,6 +14,7 @@ from datetime import datetime
 from typing import Optional, Dict, List
 
 from services.llm_service import LLMService, SYSTEM_PROMPT
+from services.knowledge_base import KnowledgeBase
 
 logger = logging.getLogger(__name__)
 
@@ -90,22 +93,61 @@ MODE_PROMPTS = {
 
 
 class AIAgent:
-    """The core Cognita AI agent."""
+    """The core Cognita AI agent with Supabase persistence."""
 
-    def __init__(self):
+    def __init__(self, knowledge_base: Optional[KnowledgeBase] = None):
         self.llm = LLMService()
         self.sessions: Dict[str, StudySession] = {}
+        self.kb = knowledge_base or KnowledgeBase()
 
-    def get_or_create_session(self, session_id: Optional[str] = None) -> StudySession:
+    async def get_or_create_session(self, session_id: Optional[str] = None) -> StudySession:
+        """Get an existing session or create a new one. Persists to Supabase."""
         if session_id and session_id in self.sessions:
             return self.sessions[session_id]
+
+        # Try loading from Supabase if not in memory
+        if session_id and self.kb.is_connected:
+            db_session = await self.kb.get_session(session_id)
+            if db_session:
+                session = StudySession(session_id)
+                session.title = db_session.get("title", "New Study Session")
+                session.created_at = db_session.get("created_at", session.created_at)
+
+                # Load chat history from DB
+                history = await self.kb.get_chat_history(session_id)
+                session.chat_history = [
+                    {"role": m["role"], "content": m["content"]}
+                    for m in history
+                ]
+
+                # Load documents from DB
+                docs = await self.kb.get_session_documents(session_id)
+                session.documents = docs
+
+                self.sessions[session_id] = session
+                logger.info("Restored session from Supabase: %s", session_id)
+                return session
+
+        # Create brand new session
         session = StudySession(session_id)
         self.sessions[session.session_id] = session
+
+        # Persist to Supabase
+        await self.kb.create_session(session.session_id, session.title)
+
         return session
 
-    def add_document_to_session(self, session_id: str, doc_info: dict) -> StudySession:
-        session = self.get_or_create_session(session_id)
+    async def add_document_to_session(self, session_id: str, doc_info: dict) -> StudySession:
+        """Add a document to a session and persist it."""
+        session = await self.get_or_create_session(session_id)
         session.add_document(doc_info)
+
+        # Persist document with session link
+        await self.kb.store_document(doc_info, session_id=session_id)
+
+        # Update session title if changed
+        await self.kb.update_session_title(session_id, session.title)
+
         return session
 
     async def chat(
@@ -115,7 +157,7 @@ class AIAgent:
         mode: str = "explain",
     ) -> dict:
         """Send a message to Cognita and get a response."""
-        session = self.get_or_create_session(session_id)
+        session = await self.get_or_create_session(session_id)
         context = session.get_context()
 
         # Build message list for the LLM
@@ -155,9 +197,13 @@ class AIAgent:
         try:
             ai_response = await self.llm.chat(messages)
 
-            # Update history
+            # Update in-memory history
             session.chat_history.append({"role": "user", "content": message})
             session.chat_history.append({"role": "assistant", "content": ai_response})
+
+            # Persist messages to Supabase
+            await self.kb.save_message(session.session_id, "user", message, mode)
+            await self.kb.save_message(session.session_id, "assistant", ai_response, mode)
 
             suggestions = self._extract_suggestions(ai_response)
 
@@ -178,7 +224,7 @@ class AIAgent:
 
     async def explain_document(self, session_id: str, doc_index: int = 0) -> dict:
         """Generate a full explanation of a specific document."""
-        session = self.get_or_create_session(session_id)
+        session = await self.get_or_create_session(session_id)
         if not session.documents:
             return {
                 "message": "No documents uploaded yet! Upload your study materials first.",
@@ -214,9 +260,32 @@ class AIAgent:
                     questions.append(clean)
         return questions[:3] if questions else defaults
 
-    def list_sessions(self) -> List[dict]:
+    async def list_all_sessions(self) -> List[dict]:
+        """List all sessions — from Supabase if connected, else in-memory."""
+        if self.kb.is_connected:
+            return await self.kb.list_sessions()
         return [s.to_dict() for s in self.sessions.values()]
 
-    def get_session_info(self, session_id: str) -> Optional[dict]:
+    def list_sessions(self) -> List[dict]:
+        """Synchronous list for backward compatibility."""
+        return [s.to_dict() for s in self.sessions.values()]
+
+    async def get_session_info(self, session_id: str) -> Optional[dict]:
+        """Get session info — tries Supabase first, then in-memory."""
+        # Check in-memory first
         session = self.sessions.get(session_id)
-        return session.to_dict() if session else None
+        if session:
+            return session.to_dict()
+
+        # Try Supabase
+        if self.kb.is_connected:
+            db_session = await self.kb.get_session(session_id)
+            if db_session:
+                return db_session
+
+        return None
+
+    async def delete_session(self, session_id: str) -> bool:
+        """Delete a session from memory and Supabase."""
+        self.sessions.pop(session_id, None)
+        return await self.kb.delete_session(session_id)

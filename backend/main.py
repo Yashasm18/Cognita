@@ -35,7 +35,7 @@ logger = logging.getLogger(__name__)
 app = FastAPI(
     title="Cognita 🧠",
     description="Your AI study companion that speaks, shows, and teaches.",
-    version="1.0.0",
+    version="2.0.0",
     docs_url="/api/docs",
     redoc_url="/api/redoc",
 )
@@ -51,10 +51,10 @@ app.add_middleware(
 # ─── Services ────────────────────────────────────────────────
 
 doc_processor = DocumentProcessor(UPLOAD_DIR)
-ai_agent = AIAgent()
+knowledge_base = KnowledgeBase()
+ai_agent = AIAgent(knowledge_base=knowledge_base)
 tts_service = TTSService()
 stt_service = STTService()
-knowledge_base = KnowledgeBase()
 
 
 # ═══════════════════════════════════════════════════════════════
@@ -67,8 +67,9 @@ async def health():
     return {
         "status": "healthy",
         "service": "Cognita 🧠",
-        "version": "1.0.0",
+        "version": "2.0.0",
         "llm": llm_status,
+        "supabase": knowledge_base.is_connected,
     }
 
 
@@ -100,12 +101,9 @@ async def upload_file(
 
     # Create / get session
     if not session_id:
-        session = ai_agent.get_or_create_session()
+        session = await ai_agent.get_or_create_session()
         session_id = session.session_id
-    ai_agent.add_document_to_session(session_id, doc_info)
-
-    # Persist in knowledge base
-    await knowledge_base.store_document(doc_info)
+    await ai_agent.add_document_to_session(session_id, doc_info)
 
     return {
         "file_id": doc_info["file_id"],
@@ -218,30 +216,43 @@ async def speech_to_text(audio: UploadFile = File(...)):
 
 
 # ═══════════════════════════════════════════════════════════════
-#  Sessions
+#  Sessions (Persistent via Supabase)
 # ═══════════════════════════════════════════════════════════════
 
 @app.post("/api/sessions/new")
 async def create_session():
-    session = ai_agent.get_or_create_session()
+    session = await ai_agent.get_or_create_session()
     return session.to_dict()
 
 
 @app.get("/api/sessions")
 async def list_sessions():
-    return {"sessions": ai_agent.list_sessions()}
+    sessions = await ai_agent.list_all_sessions()
+    return {"sessions": sessions}
 
 
 @app.get("/api/sessions/{session_id}")
 async def get_session(session_id: str):
-    info = ai_agent.get_session_info(session_id)
+    info = await ai_agent.get_session_info(session_id)
     if not info:
         raise HTTPException(404, "Session not found")
     return info
 
 
+@app.get("/api/sessions/{session_id}/history")
+async def get_session_history(session_id: str, limit: int = 50):
+    """Get full chat history for a session from Supabase."""
+    history = await knowledge_base.get_chat_history(session_id, limit=limit)
+    return {"session_id": session_id, "messages": history}
+
+
 @app.get("/api/sessions/{session_id}/documents")
 async def get_session_documents(session_id: str):
+    """Get documents for a session — from Supabase if connected."""
+    if knowledge_base.is_connected:
+        docs = await knowledge_base.get_session_documents(session_id)
+        return {"documents": docs}
+
     session = ai_agent.sessions.get(session_id)
     if not session:
         raise HTTPException(404, "Session not found")
@@ -260,6 +271,58 @@ async def get_session_documents(session_id: str):
     }
 
 
+@app.delete("/api/sessions/{session_id}")
+async def delete_session(session_id: str):
+    """Delete a session and all associated data."""
+    success = await ai_agent.delete_session(session_id)
+    if not success:
+        raise HTTPException(500, "Failed to delete session")
+    return {"status": "deleted", "session_id": session_id}
+
+
+# ═══════════════════════════════════════════════════════════════
+#  Documents (Knowledge Base)
+# ═══════════════════════════════════════════════════════════════
+
+@app.get("/api/documents")
+async def list_documents():
+    """List all documents in the knowledge base."""
+    docs = await knowledge_base.list_documents()
+    return {"documents": docs}
+
+
+@app.get("/api/documents/search")
+async def search_documents(q: str, limit: int = 5):
+    """Search documents by keyword."""
+    docs = await knowledge_base.search_documents(q, limit=limit)
+    return {"query": q, "results": docs}
+
+
+@app.delete("/api/documents/{file_id}")
+async def delete_document(file_id: str):
+    """Delete a document from the knowledge base."""
+    success = await knowledge_base.delete_document(file_id)
+    if not success:
+        raise HTTPException(500, "Failed to delete document")
+    return {"status": "deleted", "file_id": file_id}
+
+
+# ═══════════════════════════════════════════════════════════════
+#  Status
+# ═══════════════════════════════════════════════════════════════
+
+@app.get("/api/status")
+async def status():
+    """Full system status check."""
+    return {
+        "service": "Cognita 🧠",
+        "version": "2.0.0",
+        "supabase_connected": knowledge_base.is_connected,
+        "storage": "supabase" if knowledge_base.is_connected else "local",
+        "sessions_in_memory": len(ai_agent.sessions),
+    }
+
+
 # ═══════════════════════════════════════════════════════════════
 #  Run
 # ═══════════════════════════════════════════════════════════════
@@ -273,6 +336,7 @@ if __name__ == "__main__":
     print(f"  📡  Server:   http://{HOST}:{PORT}")
     print(f"  📚  API Docs: http://{HOST}:{PORT}/api/docs")
     print(f"  📁  Uploads:  {UPLOAD_DIR}")
+    print(f"  🗄️  Storage:  {'Supabase' if knowledge_base.is_connected else 'Local'}")
     print()
 
     uvicorn.run(app, host=HOST, port=PORT)
