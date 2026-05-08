@@ -4,10 +4,12 @@ Manages study sessions, document context, and conversational AI
 powered by Groq / Ollama through the LLM service.
 """
 
+from __future__ import annotations
+
 import uuid
 import logging
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Dict, List
 
 from services.llm_service import LLMService, SYSTEM_PROMPT
 
@@ -17,11 +19,11 @@ logger = logging.getLogger(__name__)
 class StudySession:
     """Represents a study session with documents and chat history."""
 
-    def __init__(self, session_id: str | None = None):
+    def __init__(self, session_id: Optional[str] = None):
         self.session_id = session_id or str(uuid.uuid4())[:12]
         self.created_at = datetime.now().isoformat()
-        self.documents: list[dict] = []
-        self.chat_history: list[dict] = []
+        self.documents: List[dict] = []
+        self.chat_history: List[dict] = []
         self.title = "New Study Session"
 
     def add_document(self, doc_info: dict):
@@ -92,9 +94,9 @@ class AIAgent:
 
     def __init__(self):
         self.llm = LLMService()
-        self.sessions: dict[str, StudySession] = {}
+        self.sessions: Dict[str, StudySession] = {}
 
-    def get_or_create_session(self, session_id: str | None = None) -> StudySession:
+    def get_or_create_session(self, session_id: Optional[str] = None) -> StudySession:
         if session_id and session_id in self.sessions:
             return self.sessions[session_id]
         session = StudySession(session_id)
@@ -109,7 +111,7 @@ class AIAgent:
     async def chat(
         self,
         message: str,
-        session_id: str | None = None,
+        session_id: Optional[str] = None,
         mode: str = "explain",
     ) -> dict:
         """Send a message to Cognita and get a response."""
@@ -197,7 +199,7 @@ class AIAgent:
         )
         return await self.chat(prompt, session_id, mode="explain")
 
-    def _extract_suggestions(self, text: str) -> list[str]:
+    def _extract_suggestions(self, text: str) -> List[str]:
         defaults = [
             "Can you explain this in simpler terms?",
             "Generate practice questions for me",
@@ -212,9 +214,9 @@ class AIAgent:
                     questions.append(clean)
         return questions[:3] if questions else defaults
 
-    def list_sessions(self) -> list[dict]:
+    def list_sessions(self) -> List[dict]:
         return [s.to_dict() for s in self.sessions.values()]
 
-    def get_session_info(self, session_id: str) -> dict | None:
+    def get_session_info(self, session_id: str) -> Optional[dict]:
         session = self.sessions.get(session_id)
         return session.to_dict() if session else None

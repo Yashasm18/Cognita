@@ -1,7 +1,9 @@
 """Pydantic models for Cognita API request/response schemas."""
 
+from __future__ import annotations
+
 from pydantic import BaseModel
-from typing import Optional
+from typing import Optional, List
 
 
 class FileUploadResponse(BaseModel):
@@ -30,7 +32,7 @@ class ChatResponse(BaseModel):
     session_id: str
     has_audio: bool = False
     audio_url: Optional[str] = None
-    suggested_questions: list[str] = []
+    suggested_questions: List[str] = []
     mode: str = "explain"
 
 

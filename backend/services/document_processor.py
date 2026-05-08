@@ -43,7 +43,11 @@ class DocumentProcessor:
         }
 
         if file_ext == "pdf":
-            result.update(self._process_pdf(file_content))
+            try:
+                result.update(self._process_pdf(file_content))
+            except Exception as e:
+                result["extracted_text"] = f"[Could not parse PDF: {e}]"
+                result["content_preview"] = "[Invalid or corrupted PDF]"
         elif file_ext in ("png", "jpg", "jpeg", "gif", "webp"):
             result.update(self._process_image(file_content, content_type))
         elif file_ext in ("txt", "md", "csv"):

@@ -4,8 +4,10 @@ Groq provides blazing-fast inference for free-tier usage.
 Ollama provides a fully local, private fallback.
 """
 
+from __future__ import annotations
+
 import logging
-from typing import Optional
+from typing import Optional, List, Dict
 from groq import Groq, AsyncGroq
 import httpx
 
