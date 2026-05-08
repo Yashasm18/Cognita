@@ -23,3 +23,6 @@ piper-tts==1.2.0
 
 # TTS fallback
 gtts==2.5.3
+
+# ElevenLabs (premium voice)
+elevenlabs>=2.0.0

@@ -115,15 +115,56 @@ export default function Home() {
     handleFileUpload(e.dataTransfer.files);
   };
 
+  const [audioPlaying, setAudioPlaying] = useState(null); // audio_id currently playing
+  const audioRef = useRef(null);
+
   const speakMessage = async (text) => {
-    // Use browser Speech Synthesis as instant fallback
+    // Stop any current playback
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current = null;
+      setAudioPlaying(null);
+    }
+    if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+
+    try {
+      // Try ElevenLabs / backend TTS first
+      const res = await textToSpeech(text);
+      if (res.audio_url) {
+        const audio = new Audio(res.audio_url);
+        audioRef.current = audio;
+        setAudioPlaying(res.audio_id);
+        audio.onended = () => { setAudioPlaying(null); audioRef.current = null; };
+        audio.onerror = () => {
+          // Fallback to browser TTS if audio fails
+          setAudioPlaying(null);
+          browserSpeak(text);
+        };
+        audio.play();
+        return;
+      }
+    } catch {
+      // Backend TTS unavailable — use browser fallback
+    }
+    browserSpeak(text);
+  };
+
+  const browserSpeak = (text) => {
     if ('speechSynthesis' in window) {
-      window.speechSynthesis.cancel();
       const utterance = new SpeechSynthesisUtterance(text.replace(/[#*`_~\[\]]/g, ''));
       utterance.rate = 0.95;
       utterance.pitch = 1;
       window.speechSynthesis.speak(utterance);
     }
+  };
+
+  const stopSpeaking = () => {
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current = null;
+    }
+    if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+    setAudioPlaying(null);
   };
 
   const newSession = () => {
@@ -267,8 +308,8 @@ export default function Home() {
                   </div>
                   {msg.role === 'assistant' && (
                     <div className="message-actions">
-                      <button className="msg-action-btn" onClick={() => speakMessage(msg.content)}>
-                        🔊 Listen
+                      <button className="msg-action-btn" onClick={() => audioPlaying ? stopSpeaking() : speakMessage(msg.content)}>
+                        {audioPlaying ? '⏹️ Stop' : '🔊 Listen'}
                       </button>
                       <button className="msg-action-btn" onClick={() => navigator.clipboard.writeText(msg.content)}>
                         📋 Copy
@@ -325,7 +366,7 @@ export default function Home() {
             </button>
           </div>
           <div className="input-hint">
-            Cognita uses Groq AI • Press Enter to send, Shift+Enter for new line
+            Cognita uses Groq AI + ElevenLabs Voice • Press Enter to send
           </div>
         </div>
       </main>

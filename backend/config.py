@@ -40,7 +40,7 @@ CORS_ORIGINS = os.getenv(
 
 # ─── Voice ───────────────────────────────────────────────────
 WHISPER_MODEL = os.getenv("WHISPER_MODEL", "base")  # tiny, base, small, medium, large
-TTS_ENGINE = os.getenv("TTS_ENGINE", "gtts")  # "piper" or "gtts"
+TTS_ENGINE = os.getenv("TTS_ENGINE", "elevenlabs")  # "elevenlabs", "gtts", or "piper"
 PIPER_MODEL_PATH = os.getenv("PIPER_MODEL_PATH", "")
 
 # Create directories
