@@ -6,10 +6,17 @@ import remarkGfm from 'remark-gfm';
 import { uploadFile, sendMessage, textToSpeech } from '@/lib/api';
 
 const MODES = [
-  { id: 'explain', label: '📖 Explain' },
-  { id: 'summarize', label: '📝 Summarize' },
-  { id: 'quiz', label: '❓ Quiz' },
-  { id: 'simplify', label: '🧩 Simplify' },
+  { id: 'explain', label: 'Explain' },
+  { id: 'summarize', label: 'Summarize' },
+  { id: 'quiz', label: 'Quiz' },
+  { id: 'simplify', label: 'Simplify' },
+];
+
+const MOODS = [
+  { label: 'Focused', prompt: 'I want to focus. Help me plan a short study session.' },
+  { label: 'Lonely', prompt: 'I feel lonely today. Can you talk with me for a bit?' },
+  { label: 'Anxious', prompt: 'I feel anxious about studying. Help me calm down and start small.' },
+  { label: 'Curious', prompt: 'Give me a creative learning challenge for today.' },
 ];
 
 export default function Home() {
@@ -45,7 +52,9 @@ export default function Home() {
 
   // Auto-scroll
   useEffect(() => {
-    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    if (messages.length > 0 || loading) {
+      chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }
   }, [messages, loading]);
 
   // Auto-resize textarea
@@ -189,6 +198,13 @@ export default function Home() {
 
   return (
     <div className="app-layout">
+      <div className="ambient-bg" aria-hidden="true">
+        <span className="aurora aurora-one" />
+        <span className="aurora aurora-two" />
+        <span className="aurora aurora-three" />
+        <div className="grid-glow" />
+      </div>
+
       {/* ─── Sidebar ────────────────────────── */}
       <aside className={`sidebar ${sidebarOpen ? 'open' : ''}`}>
         <div className="sidebar-header">
@@ -229,6 +245,9 @@ export default function Home() {
       {/* ─── Main Area ──────────────────────── */}
       <main className="main-area">
         <header className="header">
+          <button className="sidebar-toggle" onClick={() => setSidebarOpen((open) => !open)} title="Toggle sidebar">
+            ☰
+          </button>
           <div className="header-title">
             {documents.length > 0 ? `Studying ${documents.length} material${documents.length > 1 ? 's' : ''}` : 'Cognita 🧠'}
           </div>
@@ -247,14 +266,28 @@ export default function Home() {
         <div className="chat-area">
           {messages.length === 0 ? (
             <div className="chat-empty">
-              <div className="chat-empty-icon">🧠</div>
-              <h2>Welcome to Cognita</h2>
-              <p>Your AI study companion that speaks, shows, and teaches. Upload your study materials and I'll help you master them.</p>
+              <div className="companion-stage" aria-hidden="true">
+                <div className="orbit orbit-one" />
+                <div className="orbit orbit-two" />
+                <div className="chat-empty-icon">
+                  <span>🧠</span>
+                </div>
+              </div>
+              <div className="status-pill"><span /> Cognitive is ready</div>
+              <h1>Talk, study, or just breathe for a minute.</h1>
+              <p>Cognita is your private AI study companion for notes, explanations, practice questions, and the days when learning feels a little heavy.</p>
+              <div className="mood-row" aria-label="Choose a mood">
+                {MOODS.map((mood) => (
+                  <button key={mood.label} className="mood-chip" onClick={() => handleSend(mood.prompt)}>
+                    {mood.label}
+                  </button>
+                ))}
+              </div>
               <div className="quick-actions">
                 <button className="quick-action-btn" onClick={() => setShowUpload(true)}>📄 Upload PDF</button>
                 <button className="quick-action-btn" onClick={() => setShowUpload(true)}>🖼️ Upload Images</button>
-                <button className="quick-action-btn" onClick={() => handleSend('What can you help me with?')}>💡 What can you do?</button>
-                <button className="quick-action-btn" onClick={() => handleSend('Help me create a study plan')}>📋 Study Plan</button>
+                <button className="quick-action-btn" onClick={() => handleSend('What can you help me with as a student companion?')}>💡 Ask Cognita</button>
+                <button className="quick-action-btn primary" onClick={() => handleSend('Help me create a simple study plan for today')}>📋 Start Study Plan</button>
               </div>
             </div>
           ) : (
