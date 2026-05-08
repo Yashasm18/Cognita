@@ -405,6 +405,13 @@ body {
   gap: 4px;
 }
 .msg-action-btn:hover { color: var(--accent-purple-light); border-color: var(--accent-purple); }
+.msg-action-btn.active {
+  background: rgba(108,92,231,0.2);
+  border-color: var(--accent-purple);
+  color: var(--accent-purple-light);
+  animation: pulse 1.5s infinite;
+}
+.msg-action-btn:disabled { opacity: 0.35; cursor: not-allowed; }
 
 /* ─── Suggested Questions ────────────────────────────────── */
 .suggestions {
